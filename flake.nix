@@ -26,7 +26,7 @@
         });
 
         packages.secretSanta = pkgs.writeShellScriptBin "run-secret-santa" ''
-          ${pkgs.python3}/bin/python ${./main.py}
+          ${pkgs.python3}/bin/python ${./main.py} $*
         '';
       
         devShells.default = pkgs.mkShell {
