@@ -12,7 +12,7 @@
       ];
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }: {
-        packages.default = pkgs.hello;
+        apps.default.program = self'.packages.secretSanta;
 
         # Custom overlay for clingo with Python
         packages.clingo = pkgs.clingo.overrideAttrs (oldAttrs: {
@@ -24,6 +24,10 @@
           # The CFFI dependency somehow doesn't survive the copy; I'm not sure why
           propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [pkgs.python3 pkgs.python3Packages.cffi];
         });
+
+        packages.secretSanta = pkgs.writeShellScriptBin "run-secret-santa" ''
+          ${pkgs.python3}/bin/python ${./main.py}
+        '';
       
         devShells.default = pkgs.mkShell {
           buildInputs = [ self'.packages.clingo ];
